@@ -3,6 +3,7 @@ package com.erkutozer.services;
 
 import com.erkutozer.dto.ProductResponse;
 import com.erkutozer.entity.Product;
+import com.erkutozer.exception.ResourceNotFoundException;
 import com.erkutozer.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,11 @@ public class ProductService {
                 .stream()
                 .map(ProductResponse::from)
                 .toList();
+    }
+
+    public ProductResponse getProductById(Long id){
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Böyle bir kayıt bulunamadı"));
+        return ProductResponse.from(product);
     }
 
 }
