@@ -29,4 +29,7 @@ public class Product {
     @Column(nullable = false)
     private Integer stok = 0;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
 }
