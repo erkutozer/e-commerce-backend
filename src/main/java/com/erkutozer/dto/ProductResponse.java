@@ -1,5 +1,6 @@
 package com.erkutozer.dto;
 
+import com.erkutozer.entity.Category;
 import com.erkutozer.entity.Product;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ public record ProductResponse(
 ) {
 
     public static ProductResponse from(Product product){
+        Category category = product.getCategory();
         return new ProductResponse(
                 product.getId(),
                 product.getPrice(),

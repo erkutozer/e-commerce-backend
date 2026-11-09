@@ -3,6 +3,7 @@ package com.erkutozer.repository;
 import com.erkutozer.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("update Product p set p.stok = p.stok - :qty where p.id = :id and p.stok >= :qty")
     int decreaseStok(@Param("id") Long id, @Param("qty") int qty);
+
+    @EntityGraph(attributePaths = "category")
+    Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
+
 }

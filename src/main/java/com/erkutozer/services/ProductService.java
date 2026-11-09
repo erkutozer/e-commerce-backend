@@ -3,6 +3,7 @@ package com.erkutozer.services;
 
 import com.erkutozer.dto.PageResponseDto;
 import com.erkutozer.dto.ProductResponse;
+import com.erkutozer.entity.Category;
 import com.erkutozer.entity.Product;
 import com.erkutozer.exception.ResourceNotFoundException;
 import com.erkutozer.repository.ProductRepository;
