@@ -10,10 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Page<Product> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
     @Modifying
     @Query("update Product p set p.stok = p.stok - :qty where p.id = :id and p.stok >= :qty")
@@ -21,5 +22,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @EntityGraph(attributePaths = "category")
     Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
+
+    @Override
+    @EntityGraph(attributePaths = "category")
+    Page<Product> findAll(Pageable pageable);
+
+    @Override
+    @EntityGraph(attributePaths = "category")
+    Optional<Product> findById(Long id);
+
+    @EntityGraph(attributePaths = "category")
+    Page<Product> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
 }

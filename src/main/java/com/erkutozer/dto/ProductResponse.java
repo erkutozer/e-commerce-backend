@@ -10,7 +10,10 @@ public record ProductResponse(
         BigDecimal price,
         String title,
         String thumbnail,
-        Integer stok
+        Integer stok,
+        String description,
+        Long categoryId,
+        String categoryName
 ) {
 
     public static ProductResponse from(Product product){
@@ -20,7 +23,10 @@ public record ProductResponse(
                 product.getPrice(),
                 product.getTitle(),
                 product.getThumbnail(),
-                product.getStok()
+                product.getStok(),
+                product.getDescription(),
+                category != null ? category.getId() : null,
+                category != null ? category.getName() : null
         );
     }
 

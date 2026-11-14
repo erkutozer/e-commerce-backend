@@ -23,7 +23,7 @@ public class Product {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = true)
+
     private String thumbnail;
 
     @Column(nullable = false)
@@ -33,7 +33,7 @@ public class Product {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = true)
+    @JoinColumn(name = "category_id")
     private Category category;
 
 }

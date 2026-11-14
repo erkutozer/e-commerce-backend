@@ -15,7 +15,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/getAll")
+    @GetMapping("/")
     public PageResponseDto<ProductResponse> getAllProducts(
             @RequestParam(required = false) String search,
             @PageableDefault(size = 12, sort = "id") Pageable pageable
@@ -23,7 +23,7 @@ public class ProductController {
         return productService.getAllProducts(search, pageable);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ProductResponse getProductById(@PathVariable(value = "id") Long id){
         return productService.getProductById(id);
     }

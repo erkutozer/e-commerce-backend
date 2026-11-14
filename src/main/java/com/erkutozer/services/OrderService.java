@@ -1,16 +1,19 @@
 package com.erkutozer.services;
 
-import com.erkutozer.dto.CreateOrderRequestDto;
-import com.erkutozer.dto.OrderItemRequestDto;
-import com.erkutozer.dto.OrderResponseDto;
+import com.erkutozer.dto.*;
 import com.erkutozer.entity.Order;
 import com.erkutozer.entity.OrderItem;
 import com.erkutozer.entity.Product;
+import com.erkutozer.entity.User;
 import com.erkutozer.exception.InsufficientStockException;
 import com.erkutozer.exception.ResourceNotFoundException;
 import com.erkutozer.repository.OrderRepository;
 import com.erkutozer.repository.ProductRepository;
+import com.erkutozer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +31,13 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public OrderResponseDto createOrder(CreateOrderRequestDto request){
+    public OrderResponseDto createOrder(CreateOrderRequestDto request, Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Bu kullanıcı bulunamadı : " + userId));
+
         Map<Long, Integer> quantities = new LinkedHashMap<>();
 
         for(OrderItemRequestDto item : request.items()){
@@ -49,7 +56,7 @@ public class OrderService {
         }
 
         Order order = new Order();
-        order.setOrderNumber("Sipariş Numarası : " + UUID.randomUUID().toString().substring(0,8).toUpperCase());
+        order.setOrderNumber("Sipariş Numarası- " + UUID.randomUUID().toString().substring(0,8).toUpperCase());
         order.setFullName(request.fullName().trim());
         order.setEmail(request.email().trim());
         order.setPhone(request.phone().trim());
@@ -57,7 +64,6 @@ public class OrderService {
         order.setAddress(request.address().trim());
 
         BigDecimal total = BigDecimal.ZERO;
-
 
         for (Map.Entry<Long, Integer> entry : quantities.entrySet()){
             Product product = products.get(entry.getKey());
@@ -78,6 +84,23 @@ public class OrderService {
 
         order.setTotalAmount(total);
         return OrderResponseDto.from(orderRepository.save(order));
-
     }
+
+    @Transactional(readOnly = true)
+    public PageResponseDto<OrderSummaryResponseDto> getMyOrders(Long userId, Pageable pageable){
+        Pageable fixed = PageRequest.of(
+          pageable.getPageNumber(),
+          pageable.getPageSize(),
+          Sort.by(Sort.Direction.DESC, "createAt")
+        );
+        return PageResponseDto.from(orderRepository.findByUserId(userId, fixed).map(OrderSummaryResponseDto::from));
+    }
+
+    @Transactional(readOnly = true)
+    public OrderResponseDto getMyOrder(Long userId, String orderNumber){
+        Order order = orderRepository.findByOrderNumberAndUserId(orderNumber, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Böyle bir kayıt bulunamadı"));
+        return OrderResponseDto.from(order);
+    }
+
 }
