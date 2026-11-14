@@ -35,7 +35,7 @@ public class OrderController {
     }
 
     @GetMapping("/my/{orderNumber}")
-    public OrderResponseDto getMyOrder(@PathVariable(name = "id") String orderNumber,
+    public OrderResponseDto getMyOrder(@PathVariable String orderNumber,
                                        @AuthenticationPrincipal Jwt jwt){
         return orderService.getMyOrder(Long.valueOf(jwt.getSubject()), orderNumber);
     }

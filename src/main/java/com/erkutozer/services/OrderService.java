@@ -56,7 +56,8 @@ public class OrderService {
         }
 
         Order order = new Order();
-        order.setOrderNumber("Sipariş Numarası- " + UUID.randomUUID().toString().substring(0,8).toUpperCase());
+        order.setOrderNumber("SP-" + UUID.randomUUID().toString().substring(0,8).toUpperCase());
+        order.setUser(user);
         order.setFullName(request.fullName().trim());
         order.setEmail(request.email().trim());
         order.setPhone(request.phone().trim());
