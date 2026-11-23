@@ -42,7 +42,6 @@ public class OrderService {
 
         for(OrderItemRequestDto item : request.items()){
             quantities.merge(item.productId(), item.quantity(), Integer::sum);
-
         }
 
         Map<Long, Product> products = productRepository.findAllById(quantities.keySet()).stream()
@@ -78,6 +77,7 @@ public class OrderService {
             item.setProductTitle(product.getTitle());
             item.setUnitPrice(product.getPrice());
             item.setQuantity(quantity);
+            item.setThumbnail(product.getThumbnail());
             order.addItem(item);
 
             total = total.add(product.getPrice().multiply(BigDecimal.valueOf(quantity)));

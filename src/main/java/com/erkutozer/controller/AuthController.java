@@ -9,6 +9,7 @@ import com.erkutozer.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,8 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public UserResponseDto me(@AuthenticationPrincipal Jwt jwt){
+    public UserResponseDto me(@AuthenticationPrincipal Jwt jwt, Authentication authentication){
+        System.out.println("YETKİLER: " + authentication.getAuthorities());
         return authService.getCurrentUser(Long.valueOf(jwt.getSubject()));
     }
 

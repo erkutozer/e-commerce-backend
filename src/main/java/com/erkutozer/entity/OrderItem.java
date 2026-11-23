@@ -36,4 +36,7 @@ public class OrderItem {
     @Column(nullable = false)
     private Integer quantity;
 
+    @Column(nullable = true)
+    private String thumbnail;
+
 }

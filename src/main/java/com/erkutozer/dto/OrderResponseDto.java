@@ -15,9 +15,10 @@ public record OrderResponseDto(
         String city,
         String address,
         BigDecimal totalAmount,
+        String thumbnail,
         List<Item> items
 ) {
-    public record Item(Long productId, String title, BigDecimal unitPrice, Integer quantity, BigDecimal lineTotal){}
+    public record Item(Long productId, String title, BigDecimal unitPrice, Integer quantity, BigDecimal lineTotal, String thumbnail){}
 
     public static OrderResponseDto from(Order order){
         List<Item> items = order.getItems().stream()
@@ -26,10 +27,12 @@ public record OrderResponseDto(
                         i.getProductTitle(),
                         i.getUnitPrice(),
                         i.getQuantity(),
-                        i.getUnitPrice().multiply(BigDecimal.valueOf(i.getQuantity()))
+                        i.getUnitPrice().multiply(BigDecimal.valueOf(i.getQuantity())),
+                        i.getThumbnail()
+
                 )).toList();
         return new OrderResponseDto(order.getOrderNumber(), order.getCreateAt(), order.getFullName(), order.getEmail(),
-                order.getPhone(), order.getCity(), order.getAddress(), order.getTotalAmount(), items
+                order.getPhone(), order.getCity(), order.getAddress(), order.getTotalAmount(), order.getItems().getFirst().getThumbnail(), items
                 );
     }
 
